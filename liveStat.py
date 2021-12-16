@@ -1,22 +1,83 @@
+import threading
 import tkinter as tk
 from tkinter.constants import E, LEFT, NE, NW, W
 from time import *
 from typing import Sized
 import requests
 import json
+import webbrowser
+from threading import *
+import os
+import sys
+
+
+# Need to find the icon's location this way so we can create executable file
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(
+            os.path.abspath(__file__)))
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class liveStat:
     def __init__(self, master):
         self.master = master
         self.master.title("Live Stat")
-        self.master.geometry("500x500")
+        self.master.geometry("500x700")
+        # Logo = resource_path('basketball.ico')
+        # master.wm_iconbitmap(Logo)
         self.master.resizable(width=0, height=0)
         self.logo = tk.PhotoImage(file="basketball2.gif")
         self.w1 = tk.Label(self.master, image=self.logo).pack(
             side="top", anchor=NW)
         self.master.configure(bg='#fae6c3')
         self.time()
+        self.btn = tk.Button(self.master, text="NBA games",
+                             padx=10, pady=10, command=lambda: self.threading('NBAGame'))
+        self.btn.place(relx=0.25, rely=0.10)
+
+        self.btn2 = tk.Button(self.master, text="CBC News",
+                              padx=10, pady=10, command=lambda: self.threading('CBCNews'))
+        self.btn2.place(relx=0.55, rely=0.10)
+
+        self.btn3 = tk.Button(self.master, text="Load",
+                              padx=0.10, pady=10, command=lambda: self.threading('Load'))
+
+        self.btn3.place(relx=0.75, rely=0.10)
+
+    # Create a thread to run every function
+    def threading(self, keyword):
+        try:
+            # call work funtion
+            if (keyword == 'NBAGame'):
+                t1 = Thread(target=self.NBAGame)
+                t1.start()
+            if (keyword == 'CBCNews'):
+                t2 = Thread(target=self.CBCNews)
+                t2.start()
+            if (keyword == 'Load'):
+                t3 = Thread(target=self.Load)
+                t3.start()
+
+        except Exception as e:
+            print(str(e))
+
+    def NBAGame(self):
+        url_Game = 'https://www.nba.com/games'
+        webbrowser.open(url_Game)
+
+    def CBCNews(self):
+        url_News = 'https://www.cbc.ca/news'
+        webbrowser.open(url_News)
+
+    def Load(self):
+        for i in range(1000000):
+            print(i)
 
     def time(self):
         string = strftime('%H:%M:%S %p')
