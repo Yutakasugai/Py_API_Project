@@ -4,7 +4,7 @@ This project designs to display the information of weather and football games fr
 '''
     LiveStat App
 
-    2021-12-13       Saad Alkhalifah, Yuta Kasugai       
+    2021-12-13       Yuta Kasugai       
     
     This project designs to display the information of weather and football games from api address, another purpose is to design with python tkinter
 
